@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.gorojack.supershop.common.R;
 import top.gorojack.supershop.pojo.Product;
+import top.gorojack.supershop.pojo.dto.ProductDto;
 import top.gorojack.supershop.service.ProductService;
 
 import java.util.List;
@@ -31,4 +32,9 @@ public class ApiProductController {
         return R.ok(productPage);
     }
 
+    @GetMapping("/info/{productId}")
+    public R info(@PathVariable String productId) {
+        ProductDto productInfo = productService.getProductInfo(productId);
+        return R.ok(productInfo);
+    }
 }

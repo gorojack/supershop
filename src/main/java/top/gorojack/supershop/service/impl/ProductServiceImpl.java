@@ -57,9 +57,7 @@ public class ProductServiceImpl implements ProductService {
                 categories = categoryRepository.findCategoriesByStCategoryIdAndNdCategoryId(stCategoryId, ndCategoryId);
             }
             List<String> pids = new ArrayList<>();
-            categories.forEach(item -> {
-                pids.add(item.getProductId());
-            });
+            categories.forEach(item -> pids.add(item.getProductId()));
             productPage = productRepository.findProductsByBrandShowNameLikeIgnoreCaseAndProductIdIn(pageRequest, brandName, pids);
         } else {
             productPage = productRepository.findProductsByBrandShowNameLikeIgnoreCase(pageRequest, brandName);
@@ -78,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         Prop prop = propRepository.findPropsByProductId(dto.getProductId());
         dto.setDetailImages(detailImages);
         dto.setPreviewImages(previewImages);
-        dto.setProps(prop.getProps());
+        dto.setProps(prop != null ? prop.getProps() : null);
         return dto;
     }
 
@@ -104,9 +102,7 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> findByNdCategoryId(Integer ndCateId, Integer page, Integer pageSize) {
         List<Category> categoryList = categoryRepository.findCategoriesByNdCategoryId(ndCateId);
         List<String> productIds = new ArrayList<>();
-        categoryList.forEach(item -> {
-            productIds.add(item.getProductId());
-        });
+        categoryList.forEach(item -> productIds.add(item.getProductId()));
         PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
         Page<Product> productPage = productRepository.findProductsByProductIdIn(pageRequest, productIds);
         return new PageImpl<>(productPage.getContent(), pageRequest, productPage.getTotalElements());
