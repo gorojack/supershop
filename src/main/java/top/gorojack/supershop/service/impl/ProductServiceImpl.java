@@ -10,10 +10,7 @@ import top.gorojack.supershop.pojo.dto.ProductDto;
 import top.gorojack.supershop.service.ProductService;
 import top.gorojack.supershop.utils.UrlUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -28,6 +25,8 @@ public class ProductServiceImpl implements ProductService {
     private PreviewImageRepository previewImageRepository;
     @Resource
     private PropRepository propRepository;
+    @Resource
+    private ProductDAL productDAL;
 
     public Long count() {
         return productRepository.count();
@@ -94,5 +93,22 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
         propRepository.save(prop);
         return true;
+    }
+
+    @Override
+    public List<Product> findByRandom(Integer size) {
+        return productDAL.findByRandom(size);
+    }
+
+    @Override
+    public Page<Product> findByNdCategoryId(Integer ndCateId, Integer page, Integer pageSize) {
+        List<Category> categoryList = categoryRepository.findCategoriesByNdCategoryId(ndCateId);
+        List<String> productIds = new ArrayList<>();
+        categoryList.forEach(item -> {
+            productIds.add(item.getProductId());
+        });
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<Product> productPage = productRepository.findProductsByProductIdIn(pageRequest, productIds);
+        return new PageImpl<>(productPage.getContent(), pageRequest, productPage.getTotalElements());
     }
 }

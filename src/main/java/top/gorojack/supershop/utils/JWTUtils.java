@@ -24,7 +24,7 @@ public class JWTUtils {
 
     @Value("${jwt.expiration}")
     public void setExpiration(Long expiration) {
-        JWTUtils.EXPIRATION = expiration;
+        JWTUtils.EXPIRATION = expiration * 1000;
     }
 
     public static String createJWT(User user) {

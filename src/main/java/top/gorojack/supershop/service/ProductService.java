@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import top.gorojack.supershop.pojo.Product;
 import top.gorojack.supershop.pojo.dto.ProductDto;
 
+import java.util.List;
+
 public interface ProductService {
 
     Long count();
@@ -17,4 +19,8 @@ public interface ProductService {
     ProductDto getProductInfo(String productId);
 
     boolean update(ProductDto productDto);
+
+    List<Product> findByRandom(Integer size);
+
+    Page<Product> findByNdCategoryId(Integer ndCateId, Integer page, Integer pageSize);
 }

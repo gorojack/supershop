@@ -26,6 +26,10 @@ public class R {
         return new R(2000, msg, data);
     }
 
+    public static R fail(Integer code, String msg) {
+        return new R(code, msg, null);
+    }
+
     public static R fail(Integer code, String msg, Object data) {
         return new R(code, msg, data);
     }

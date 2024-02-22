@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.gorojack.supershop.annotation.AdminRequired;
 import top.gorojack.supershop.common.R;
 import top.gorojack.supershop.pojo.CategoryName;
 import top.gorojack.supershop.service.CategoryNameService;
@@ -18,6 +19,7 @@ public class CategoryController {
     @Resource
     private CategoryNameService categoryNameService;
 
+    @AdminRequired
     @GetMapping("/list/{stCateId}/{ndCateId}")
     public R list(@PathVariable Integer stCateId, @PathVariable Integer ndCateId) {
         List<CategoryName> categoryList = categoryNameService.listCategoryName(stCateId, ndCateId);

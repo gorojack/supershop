@@ -16,4 +16,4 @@ server:
   port: 8080
 jwt:
   secret: superShop
-  expiration: 600
+  expiration: 3600

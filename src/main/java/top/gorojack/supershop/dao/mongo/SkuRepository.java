@@ -11,4 +11,6 @@ import java.util.List;
 public interface SkuRepository extends MongoRepository<Sku, ObjectId> {
 
     List<Sku> findSkusByProductId(String productId);
+
+    List<Sku> findSkuBySkuAndProductId(String sku, String productId);
 }

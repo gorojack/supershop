@@ -13,4 +13,6 @@ public interface CategoryRepository extends MongoRepository<Category, ObjectId> 
     List<Category> findCategoriesByStCategoryIdAndNdCategoryId(Integer stCategoryId, Integer ndCategoryId);
 
     List<Category> findCategoriesByStCategoryId(Integer stCategoryId);
+
+    List<Category> findCategoriesByNdCategoryId(Integer ndCategoryId);
 }

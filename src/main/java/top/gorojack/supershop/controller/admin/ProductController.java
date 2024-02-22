@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import top.gorojack.supershop.annotation.AdminRequired;
 import top.gorojack.supershop.common.R;
 import top.gorojack.supershop.pojo.Product;
 import top.gorojack.supershop.pojo.Sku;
@@ -22,30 +23,35 @@ public class ProductController {
     @Resource
     private SkuService skuService;
 
+    @AdminRequired
     @GetMapping("/page/{page}/{pageSize}")
     public R page(@PathVariable Integer page, @PathVariable Integer pageSize) {
         Page<Product> productPage = productService.findPage(page, pageSize);
         return R.ok(productPage);
     }
 
+    @AdminRequired
     @GetMapping("/page/{page}/{pageSize}/{query}")
     public R pageQuery(@PathVariable Integer page, @PathVariable Integer pageSize, @PathVariable String query) {
         Page<Product> productPage = productService.findPageByQuery(page, pageSize, query);
         return R.ok(productPage);
     }
 
+    @AdminRequired
     @GetMapping("/info/{productId}")
     public R info(@PathVariable String productId) {
         ProductDto productInfo = productService.getProductInfo(productId);
         return R.ok(productInfo);
     }
 
+    @AdminRequired
     @GetMapping("/sku/{productId}")
     public R sku(@PathVariable String productId) {
         List<Sku> skus = skuService.findByProductId(productId);
         return R.ok(skus);
     }
 
+    @AdminRequired
     @PostMapping("/update")
     public R update(@RequestBody ProductDto productDto) {
         boolean update = productService.update(productDto);

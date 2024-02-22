@@ -7,6 +7,8 @@ import top.gorojack.supershop.pojo.User;
 import top.gorojack.supershop.service.UserService;
 import top.gorojack.supershop.utils.JWTUtils;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -19,5 +21,10 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return JWTUtils.createJWT(user);
+    }
+
+    @Override
+    public User findById(Long uid) {
+        return userRepository.findById(uid).get();
     }
 }

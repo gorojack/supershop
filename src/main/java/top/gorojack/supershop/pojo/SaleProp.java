@@ -30,5 +30,6 @@ public class SaleProp {
         private String name;
         private String vid;
         private String sizeTableDetailId;
+        private String productId;
     }
 }
