@@ -36,7 +36,7 @@ public class CartServiceImpl implements CartService {
             _cart.setSkuId(cart.getSkuId());
             _cart.setNumber(cart.getNumber());
             _cart.setCreateTime(LocalDateTime.now());
-            _cart.setStatus("0");
+            _cart.setStatus(0);
             return cartRepository.save(_cart);
         }
         dbCart.setNumber(dbCart.getNumber() + 1);
@@ -45,7 +45,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartDto> findUserCart(Long uid) {
-        List<Cart> cartPage = cartRepository.findCartsByUidAndStatus(uid,"0");
+        List<Cart> cartPage = cartRepository.findCartsByUid(uid);
         List<CartDto> cartDtoList = new ArrayList<>();
         cartPage.forEach(item -> {
             CartDto cartDto = new CartDto(item);
@@ -69,7 +69,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteByIds(List<Integer> ids) {
-        // TODO soft delete by ids
+    public void deleteByIds(List<Long> ids) {
+        cartRepository.deleteAllById(ids);
     }
 }

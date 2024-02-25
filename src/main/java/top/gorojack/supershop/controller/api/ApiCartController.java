@@ -52,7 +52,7 @@ public class ApiCartController {
 
     @LoginRequired
     @PostMapping("/delete")
-    public R delete(@RequestBody List<Integer> ids){
+    public R delete(@RequestBody List<Long> ids){
         cartService.deleteByIds(ids);
         return R.ok();
     }

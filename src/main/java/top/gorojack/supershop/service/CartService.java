@@ -14,5 +14,5 @@ public interface CartService {
 
     Cart updateNumber(Cart cart);
 
-    void deleteByIds(List<Integer> ids);
+    void deleteByIds(List<Long> ids);
 }
