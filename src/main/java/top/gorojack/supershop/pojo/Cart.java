@@ -19,5 +19,5 @@ public class Cart {
     private String skuId;
     private LocalDateTime createTime;
     private Integer number;
-    private Integer status;
+    private String status;
 }

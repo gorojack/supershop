@@ -13,4 +13,6 @@ public interface SkuRepository extends MongoRepository<Sku, ObjectId> {
     List<Sku> findSkusByProductId(String productId);
 
     List<Sku> findSkuBySkuAndProductId(String sku, String productId);
+
+    Sku findSkuBySkuId(String skuId);
 }
