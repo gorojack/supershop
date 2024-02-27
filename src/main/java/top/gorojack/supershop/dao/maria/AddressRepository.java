@@ -10,7 +10,7 @@ import top.gorojack.supershop.pojo.Address;
 import java.util.List;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address,Long> {
+public interface AddressRepository extends JpaRepository<Address, Long> {
 
     List<Address> findAddressByUid(Long uid);
 
@@ -18,4 +18,6 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
     @Transactional
     @Query("UPDATE Address SET isDefault = 0 WHERE uid = :uid")
     void clearUserDefaultAddress(Long uid);
+
+    Address findAddressByUidAndIsDefault(Long uid, Integer isDefault);
 }

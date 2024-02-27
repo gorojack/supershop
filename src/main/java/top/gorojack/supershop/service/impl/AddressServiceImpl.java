@@ -51,7 +51,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void deleteById(Long id) {
+        User user = UserInfoThreadHolder.getCurrentUser();
         addressRepository.deleteById(id);
+        Address address = addressRepository.findAddressByUidAndIsDefault(user.getUid(), 1);
+        if (null == address) {
+            List<Address> addressList = addressRepository.findAddressByUid(user.getUid());
+            if (!addressList.isEmpty()) {
+                addressRepository.clearUserDefaultAddress(user.getUid());
+                Address _address = addressList.get(0);
+                _address.setIsDefault(1);
+                addressRepository.save(_address);
+            }
+        }
     }
 
     private String getFullCity(Integer code) {
