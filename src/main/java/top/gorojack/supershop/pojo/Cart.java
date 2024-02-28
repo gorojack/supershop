@@ -1,6 +1,7 @@
 package top.gorojack.supershop.pojo;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "t_cart")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

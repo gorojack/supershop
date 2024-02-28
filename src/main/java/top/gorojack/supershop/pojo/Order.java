@@ -1,9 +1,6 @@
 package top.gorojack.supershop.pojo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "t_order")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +20,11 @@ public class Order {
     private Long uid;
     private String orderSn;
     private String skuId;
+    private Integer number;
     private Long addressId;
     private LocalDateTime createTime;
     private LocalDateTime paymentTime;
-    private BigDecimal totalPrice;
+    private Double totalPrice;
     private String comment;
-    private Integer status = 0;
+    private Integer status = 1;
 }
