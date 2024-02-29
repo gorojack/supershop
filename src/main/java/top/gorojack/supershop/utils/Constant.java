@@ -14,4 +14,5 @@ public class Constant {
     public static final String ILLEGAL_ARGUMENTS = "非法参数";
     public static final String OPERATION_FAILED = "操作失败";
     public static final String DELETE_SUCCESSFUL = "删除成功";
+    public static final String CREATE_SUCCESSFUL = "创建成功";
 }

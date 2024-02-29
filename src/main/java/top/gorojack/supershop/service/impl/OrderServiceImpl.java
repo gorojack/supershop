@@ -1,6 +1,9 @@
 package top.gorojack.supershop.service.impl;
 
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import top.gorojack.supershop.dao.maria.AddressRepository;
 import top.gorojack.supershop.dao.maria.CartRepository;
@@ -13,6 +16,7 @@ import top.gorojack.supershop.pojo.*;
 import top.gorojack.supershop.pojo.dto.AddressDto;
 import top.gorojack.supershop.pojo.dto.CartDto;
 import top.gorojack.supershop.pojo.dto.OrderConfirmDto;
+import top.gorojack.supershop.pojo.dto.OrderDto;
 import top.gorojack.supershop.service.OrderService;
 
 import java.math.BigDecimal;
@@ -76,30 +80,87 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Integer createOrder(List<Long> cartIds) {
-        int result = 0;
+    public Integer createOrder(OrderConfirmDto orderConfirmDto) {
+        Integer result = 0;
         User user = UserInfoThreadHolder.getCurrentUser();
-        for (Long item : cartIds) {
-            Optional<Cart> cart = cartRepository.findById(item);
-            if (cart.isEmpty()) continue;
-            Sku sku = skuRepository.findSkuBySkuId(cart.get().getSkuId());
-            if (null == sku) continue;
-            Long uid = user.getUid();
-            String skuId = cart.get().getSkuId();
+        Long uid = user.getUid();
+        AddressDto address = orderConfirmDto.getAddress();
+        Map<String, List<CartDto>> brands = orderConfirmDto.getBrands();
+        BigDecimal totalPrice = BigDecimal.valueOf(0);
+        double totalPriceD = 0.0;
+        for (Map.Entry<String, List<CartDto>> entry : brands.entrySet()) {
+            List<CartDto> cartItem = entry.getValue();
             String orderSnPrefix = UUID.randomUUID().toString();
             String orderSn = orderSnPrefix.substring(0, orderSnPrefix.indexOf("-")) + user.getUid() + System.currentTimeMillis();
-            BigDecimal totalPrice = BigDecimal.valueOf(Double.parseDouble(sku.getSalePrice()) * cart.get().getNumber());
-            Order order = new Order();
-            order.setUid(uid);
-            order.setSkuId(skuId);
-            order.setOrderSn(orderSn);
-            order.setCreateTime(LocalDateTime.now());
-            order.setTotalPrice(totalPrice);
-            orderRepository.save(order);
-            cart.get().setStatus(2);
-            cartRepository.save(cart.get());
-            result++;
+            double brandTotalPrice = 0.0;
+            for (CartDto item : cartItem) {
+                String skuId = item.getSkuId();
+                Sku sku = skuRepository.findSkuBySkuId(skuId);
+                String salePrice = sku.getSalePrice();
+                double price = Double.parseDouble(salePrice) * item.getNumber();
+                brandTotalPrice *= price;
+                totalPriceD += brandTotalPrice;
+                Order order = new Order();
+                order.setUid(uid);
+                order.setSkuId(skuId);
+                order.setOrderSn(orderSn);
+                order.setNumber(item.getNumber());
+                order.setAddressId(address.getId());
+                order.setCreateTime(LocalDateTime.now());
+                order.setTotalPrice(price);
+                orderRepository.save(order);
+                Cart cart = new Cart();
+                BeanUtils.copyProperties(item, cart);
+                cart.setStatus(2);
+                cartRepository.save(cart);
+                result++;
+            }
         }
+        return result;
+    }
+
+    @Override
+    public Map<String, List<OrderDto>> list(Integer type, Integer page, Integer pageSize) {
+        User user = UserInfoThreadHolder.getCurrentUser();
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<Order> orderPage;
+        if (type == 0) {
+            orderPage = orderRepository.findOrdersByUidOrderByCreateTimeDescOrderSnDesc(pageRequest, user.getUid());
+        } else {
+            orderPage = orderRepository.findOrdersByUidAndStatusOrderByCreateTimeDescOrderSnDesc(pageRequest, user.getUid(), type);
+        }
+        List<Order> orderList = orderPage.getContent();
+        Map<String, List<OrderDto>> result = new LinkedHashMap<>();
+        orderList.forEach(item -> {
+            OrderDto dto = new OrderDto(item);
+            Product product = productRepository.findProductBySkuId(item.getSkuId());
+            dto.setProduct(product);
+            if (null == product) return;
+            String key = product.getBrandId() + ";" + product.getBrandShowName() + ";" + dto.getOrderSn();
+            if (result.containsKey(key)) {
+                result.get(key).add(dto);
+            } else {
+                List<OrderDto> orderDtoList = new ArrayList<>();
+                orderDtoList.add(dto);
+                result.put(key, orderDtoList);
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public Map<String, Integer> getUserStatus() {
+        Map<String, Integer> result = new HashMap<>();
+        User user = UserInfoThreadHolder.getCurrentUser();
+        if (null == user) return result;
+        Integer all = orderRepository.countByUidAndStatus(user.getUid(), 0);
+        Integer unPaid = orderRepository.countByUidAndStatus(user.getUid(), 1);
+        Integer waitSend = orderRepository.countByUidAndStatus(user.getUid(), 2);
+        Integer waitSign = orderRepository.countByUidAndStatus(user.getUid(), 3);
+        result.put("all", all);
+        result.put("unPaid", unPaid);
+        result.put("waitSend", waitSend);
+        result.put("waitSign", waitSign);
         return result;
     }
 
