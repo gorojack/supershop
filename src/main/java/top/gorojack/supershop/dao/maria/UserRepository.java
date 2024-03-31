@@ -8,4 +8,6 @@ import top.gorojack.supershop.pojo.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     public User getUserByUsernameAndPassword(String username, String password);
+
+    public User getUserByUsername(String username);
 }
