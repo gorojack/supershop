@@ -1,5 +1,6 @@
 package top.gorojack.supershop.handler.interceptor;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,13 @@ import top.gorojack.supershop.exception.LoginException;
 import top.gorojack.supershop.handler.UserInfoThreadHolder;
 import top.gorojack.supershop.pojo.User;
 import top.gorojack.supershop.utils.JWTUtils;
+import top.gorojack.supershop.utils.RedisUtils;
 
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -20,6 +25,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         LoginRequired annotation = method.getMethodAnnotation(LoginRequired.class);
         if (null == annotation) return true;
         String token = request.getHeader("token");
+        String jwt = redisUtils.get(token);
+        if (null == jwt) throw new LoginException();
         User user = JWTUtils.parseJWT(token);
         if (null == user) throw new LoginException();
         UserInfoThreadHolder.setCurrentUser(user);
