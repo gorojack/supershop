@@ -49,8 +49,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(UserRegDto dto) {
         User reg = new User();
+        String code = redisUtils.get(dto.getEmail());
+        if (null == code || !code.equals(dto.getCode()))
+            return null;
         reg.setUsername(dto.getUsername());
         reg.setNickname(dto.getUsername());
+        reg.setEmail(dto.getEmail());
         String encryptPassword = DigestUtils.md5DigestAsHex(dto.getPassword().getBytes());
         reg.setPassword(encryptPassword);
         reg.setAvatar("https://images.gorojack.top/i/2024/03/31/66093c8d285ab.png");

@@ -71,7 +71,7 @@ public class ApiUserController {
 
     @PostMapping("/register")
     public R register(@RequestBody UserRegDto dto) {
-        if (null == dto.getUsername() || null == dto.getPassword() || null == dto.getEmail())
+        if (null == dto.getUsername() || null == dto.getPassword() || null == dto.getEmail() || null == dto.getCode())
             return R.fail("参数错误");
         User reg = userService.register(dto);
         if (null == reg) return R.fail(Constant.REGISTRATION_FAILED);
