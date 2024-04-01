@@ -1,6 +1,8 @@
 # 超级商城
 个人毕设项目  
 基于SpringBoot实现的商城API（Restful风格）  
+数据库采用Mariadb（用户信息）和MongoDB（商品信息）  
+商品数据来源于唯品会，涉及版权原因不公开MongoDB数据  
 前端Uni-app地址：https://github.com/gorojack/supershop-uni  
 后台管理地址（WIP）：https://github.com/gorojack/supershop-admin-vue  
 功能列表
