@@ -107,4 +107,11 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> productPage = productRepository.findProductsByProductIdIn(pageRequest, productIds);
         return new PageImpl<>(productPage.getContent(), pageRequest, productPage.getTotalElements());
     }
+
+    @Override
+    public Page<Product> search(Integer page, Integer pageSize, String query) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        Page<Product> productPage = productRepository.findProductsByTitleLikeIgnoreCase(pageRequest, query);
+        return new PageImpl<>(productPage.getContent(),pageRequest,productPage.getTotalElements());
+    }
 }

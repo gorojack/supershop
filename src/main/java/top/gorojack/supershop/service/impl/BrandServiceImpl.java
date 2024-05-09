@@ -1,7 +1,6 @@
 package top.gorojack.supershop.service.impl;
 
 import jakarta.annotation.Resource;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -46,5 +45,10 @@ public class BrandServiceImpl implements BrandService {
             brandPage = brandRepository.findBrandsByNameLikeIgnoreCase(pageRequest, name);
         }
         return new PageImpl<>(brandPage.getContent(), pageRequest, brandPage.getTotalElements());
+    }
+
+    @Override
+    public Brand update(Brand brand) {
+        return brandRepository.save(brand);
     }
 }

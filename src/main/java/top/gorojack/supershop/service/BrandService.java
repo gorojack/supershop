@@ -12,4 +12,6 @@ public interface BrandService {
     Page<Brand> findPage(Integer page, Integer pageSize);
 
     Page<Brand> findPage(Integer page, Integer pageSize, String query);
+
+    Brand update(Brand brand);
 }

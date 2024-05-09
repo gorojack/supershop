@@ -23,4 +23,6 @@ public interface ProductService {
     List<Product> findByRandom(Integer size);
 
     Page<Product> findByNdCategoryId(Integer ndCateId, Integer page, Integer pageSize);
+
+    Page<Product> search(Integer page, Integer pageSize, String query);
 }

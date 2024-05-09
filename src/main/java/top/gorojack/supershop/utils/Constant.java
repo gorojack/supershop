@@ -18,4 +18,6 @@ public class Constant {
     public static final String REGISTRATION_FAILED = "注册失败";
     public static final String REGISTRATION_SUCCESSFUL = "注册成功";
     public static final String THE_USER_ALREADY_EXISTS = "用户已存在";
+    public static final String UPDATE_FAILED = "更新失败";
+    public static final String UPDATE_SUCCESSFUL = "更新成功";
 }

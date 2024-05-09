@@ -37,4 +37,16 @@ public class ApiProductController {
         ProductDto productInfo = productService.getProductInfo(productId);
         return R.ok(productInfo);
     }
+
+    @GetMapping("/search/{page}/{pageSize}")
+    public R searchPage(@PathVariable Integer page, @PathVariable Integer pageSize) {
+        Page<Product> products = productService.findPage(page, pageSize);
+        return R.ok(products);
+    }
+
+    @GetMapping("/search/{page}/{pageSize}/{query}")
+    public R search(@PathVariable Integer page, @PathVariable Integer pageSize, @PathVariable String query) {
+        Page<Product> products = productService.search(page, pageSize, query);
+        return R.ok(products);
+    }
 }

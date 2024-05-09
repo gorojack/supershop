@@ -22,4 +22,6 @@ public interface ProductRepository extends MongoRepository<Product, ObjectId> {
     Page<Product> findProductsByProductIdIn(Pageable pageable, List<String> productIds);
 
     Product findProductBySkuId(String skuId);
+
+    Page<Product> findProductsByTitleLikeIgnoreCase(Pageable pageable, String title);
 }

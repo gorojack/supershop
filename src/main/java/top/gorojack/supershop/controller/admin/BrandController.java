@@ -7,6 +7,7 @@ import top.gorojack.supershop.annotation.AdminRequired;
 import top.gorojack.supershop.common.R;
 import top.gorojack.supershop.pojo.Brand;
 import top.gorojack.supershop.service.BrandService;
+import top.gorojack.supershop.utils.Constant;
 
 @RestController
 @RequestMapping("/v1/admin/brand")
@@ -39,7 +40,8 @@ public class BrandController {
     @AdminRequired
     @PostMapping("/update")
     public R update(@RequestBody Brand brand) {
-        // TODO The api of update brand
-        return R.ok();
+        Brand update = brandService.update(brand);
+        if (null == update) return R.fail(Constant.UPDATE_FAILED);
+        return R.ok(Constant.UPDATE_SUCCESSFUL);
     }
 }
